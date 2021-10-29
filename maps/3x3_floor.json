@@ -1,4 +1,5 @@
-[
+{
+  "Locations": [
   {
     "Label": "A1",
     "Transitions": {
@@ -69,3 +70,4 @@
     }
   }
 ]
+}

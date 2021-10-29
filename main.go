@@ -38,7 +38,6 @@ TODO:
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"matilda/floor"
 	"os"
@@ -55,21 +54,17 @@ func pathsTo(location floor.Location, destination floor.Location) {
 }
 type locationArray []floor.Location
 
-//Todo - create a Floor type and include a load function. We should also consider dumping again.
-
 func main() {
 	//gormExample()
 	//barr, _ := json.MarshalIndent(locations, "", "    ")
 	//fmt.Println(string(barr))
-	locations := make([]floor.Location, 0)
-	pwd, _ := os.Getwd()
-	dat, err := os.ReadFile(pwd + "/maps/3x3_floor.json") //TODO: Use filepath.join or something.
-	if (err != nil) {
-		fmt.Printf("Crash: %s", err)
+	var plan floor.Plan
+	err := plan.LoadJson("3x3_floor")
+	if err != nil {
+		fmt.Println(err)
 		os.Exit(1)
 	}
-	json.Unmarshal(dat, &locations)
-	for i, location := range locations {
+	for i, location := range plan.Locations {
 		fmt.Printf("%v %v\n", i, location)
 		//for j, destination := range locations {
 		//	if i!=j {
