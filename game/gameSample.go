@@ -1,9 +1,9 @@
 package game
 
 import (
-"fmt"
-"math/rand"
-"time"
+	"fmt"
+	"math/rand"
+	"time"
 )
 
 type Game struct {
@@ -83,24 +83,24 @@ var evts = map[string]*Event{
 }
 
 var locationMap = map[string]*Location{
-  	"Bridge":      {
-		  "You are on the bridge of a spaceship sitting in the Captain's chair.",
-		  []string{"Ready Room", "Turbo Lift"},
-		  []string{"alienAttack"}},
-  	"Ready Room":  {
-		  "The Captain's ready room.",
-		  []string{"Bridge"},
-		  []string{}},
-	"Turbo Lift":  {
-		  "A Turbo Lift that takes you anywhere in the ship.",
-		  []string{"Bridge", "Lounge", "Engineering"},
-		  []string{"android"}},
+	"Bridge": {
+		"You are on the bridge of a spaceship sitting in the Captain's chair.",
+		[]string{"Ready Room", "Turbo Lift"},
+		[]string{"alienAttack"}},
+	"Ready Room": {
+		"The Captain's ready room.",
+		[]string{"Bridge"},
+		[]string{}},
+	"Turbo Lift": {
+		"A Turbo Lift that takes you anywhere in the ship.",
+		[]string{"Bridge", "Lounge", "Engineering"},
+		[]string{"android"}},
 	"Engineering": {
-		  "You are in engineering where you see the star drive",
-		  []string{"Turbo Lift"},
-		  []string{"alienAttack"}},
-	"Lounge":      {
-		  "You are in the lounge, you feel very relaxed",
-		  []string{"Turbo Lift"},
-		  []string{"relaxing"}},
+		"You are in engineering where you see the star drive",
+		[]string{"Turbo Lift"},
+		[]string{"alienAttack"}},
+	"Lounge": {
+		"You are in the lounge, you feel very relaxed",
+		[]string{"Turbo Lift"},
+		[]string{"relaxing"}},
 }

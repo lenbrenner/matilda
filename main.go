@@ -52,6 +52,7 @@ func pathsTo(location floor.Location, destination floor.Location) {
 
 	}
 }
+
 type locationArray []floor.Location
 
 func main() {
