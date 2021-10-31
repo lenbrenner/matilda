@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option go_package = "takeoff.com/matilda/api";
+option java_multiple_files = true;
+option java_package = "com.takeoff.matilda";
+option java_outer_classname = "Matilda";
+
+package api;
+
+service Matilda {
+  rpc GetSquare(Point) returns (Square) {}
+}
+
+message Point {
+  int32 latitude = 1;
+  int32 longitude = 2;
+}
+
+message Square {
+  string name = 1;
+  Point location = 2;
+  //Todo - add transitions and make this more like Location
+}

@@ -27,6 +27,18 @@ TODO:
 	Simpler JSON? https://pkg.go.dev/github.com/bitly/go-simplejson
 	Break project into: src, data/resources, ... it currently looks weird to have our json in the middle of go files
 	interfaces and delegation: https://medium.com/code-zen/go-interfaces-and-delegation-pattern-f962c138dc1e
+    gRPC info:
+    	https://grpc.io/docs/languages/go/basics - this is the stack I am started with
+		https://grpc.io/docs/languages/go/quickstart
+	brew install api
+	> Emacs Lisp files have been installed to:
+  	>     /usr/local/share/emacs/site-lisp/api
+        $ go install google.golang.org/api/cmd/protoc-gen-go@v1.26
+	https://developers.google.com/protocol-buffers/docs/gotutorial
+	$ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1
+	protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative api/matilda.proto
+    export GOPATH=$HOME/go
+    export PATH=$PATH:$GOPATH/bin
 */
 
 //Create some locations
@@ -39,8 +51,8 @@ package main
 
 import (
 	"fmt"
-	"matilda/floor"
 	"os"
+	"takeoff.com/matilda/floor"
 )
 
 func pathsTo(location floor.Location, destination floor.Location) {
