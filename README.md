@@ -1,14 +1,15 @@
 # Description
-The route guide server and client demonstrate how to use grpc go libraries to
-perform unary, client streaming, server streaming and full duplex RPCs.
+Matilda is a waltzer.
 
-Please refer to [gRPC Basics: Go](https://grpc.io/docs/tutorials/basic/go.html) for more information.
-
-See the definition of the route guide service in routeguide/route_guide.proto.
+The purpose of this project is to explore paths through floor. I am using
+Location to represent a square on a grid. The square have transitions from
+which we can build a graph. On initialization, we will build all paths from
+one location to another. By calculating these ahead of time we should be able
+to reduce overall traffic.
 
 # Run the sample code
-To compile and run the server, assuming you are in the root of the route_guide
-folder, i.e., .../examples/route_guide/, simply:
+To compile and run the server, assuming you are in the root where this README.md
+file lives:
 
 ```sh
 $ go run server/server.go
