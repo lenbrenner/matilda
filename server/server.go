@@ -14,8 +14,8 @@ import (
 	"github.com/golang/protobuf/proto"
 	"google.golang.org/grpc/credentials"
 
-	pb "takeoff.com/matilda/api"
 	"takeoff.com/matilda/data"
+	pb "takeoff.com/matilda/resources"
 )
 
 var (
@@ -28,24 +28,24 @@ var (
 
 type matildaServer struct {
 	pb.UnimplementedMatildaServer
-	savedFeatures []*pb.Square // read-only after initialized
+	savedLocations []*pb.Location // read-only after initialized
 
 	mu         sync.Mutex // protects routeNotes
 }
 
 // GetFeature returns the feature at the given point.
-func (s *matildaServer) GetSquare(ctx context.Context, point *pb.Point) (*pb.Square, error) {
-	for _, feature := range s.savedFeatures {
-		if proto.Equal(feature.Location, point) {
-			return feature, nil
+func (s *matildaServer) GetLocation(ctx context.Context, point *pb.Point) (*pb.Location, error) {
+	for _, location := range s.savedLocations {
+		if proto.Equal(location.Location, point) {
+			return location, nil
 		}
 	}
-	// No feature was found, return an unnamed feature
-	return &pb.Square{Location: point}, nil
+	// No location was found, return an unnamed location
+	return &pb.Location{Location: point}, nil
 }
 
-// loadSquares loads features from a JSON file.
-func (s *matildaServer) loadSquares(filePath string) {
+// loadLocations loads features from a JSON file.
+func (s *matildaServer) loadLocations(filePath string) {
 	var data []byte
 	if filePath != "" {
 		var err error
@@ -56,14 +56,14 @@ func (s *matildaServer) loadSquares(filePath string) {
 	} else {
 		data = exampleData
 	}
-	if err := json.Unmarshal(data, &s.savedFeatures); err != nil {
+	if err := json.Unmarshal(data, &s.savedLocations); err != nil {
 		log.Fatalf("Failed to load default features: %v", err)
 	}
 }
 
 func newServer() *matildaServer {
 	s := &matildaServer{}
-	s.loadSquares(*jsonDBFile)
+	s.loadLocations(*jsonDBFile)
 	return s
 }
 

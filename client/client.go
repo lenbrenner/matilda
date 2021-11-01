@@ -9,8 +9,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	pb "takeoff.com/matilda/api"
 	"takeoff.com/matilda/data"
+	pb "takeoff.com/matilda/resources"
 )
 
 var (
@@ -22,12 +22,12 @@ var (
 
 // printFeature gets the feature for the given point.
 func printFeature(client pb.MatildaClient, point *pb.Point) {
-	log.Printf("Getting feature for point (%d, %d)", point.Latitude, point.Longitude)
+	log.Printf("Getting location for point (%d, %d)", point.Latitude, point.Longitude)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	feature, err := client.GetSquare(ctx, point)
+	feature, err := client.GetLocation(ctx, point)
 	if err != nil {
-		log.Fatalf("%v.GetFeatures(_) = _, %v: ", client, err)
+		log.Fatalf("%v.GetLocation(_) = _, %v: ", client, err)
 	}
 	log.Println(feature)
 }

@@ -5,7 +5,7 @@ gRPC info:
 $ go install google.golang.org/api/cmd/protoc-gen-go@v1.26
 https://developers.google.com/protocol-buffers/docs/gotutorial
 $ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1
-protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative api/matilda.proto
+protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative resources/matilda.proto
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 
