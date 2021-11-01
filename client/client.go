@@ -20,16 +20,16 @@ var (
 	serverHostOverride = flag.String("server_host_override", "x.test.example.com", "The server name used to verify the hostname returned by the TLS handshake")
 )
 
-// printFeature gets the feature for the given point.
-func printFeature(client pb.MatildaClient, point *pb.Point) {
+// printLocation gets the feature for the given point.
+func printLocation(client pb.MatildaClient, point *pb.Point) {
 	log.Printf("Getting location for point (%d, %d)", point.Latitude, point.Longitude)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	feature, err := client.GetLocation(ctx, point)
+	location, err := client.GetLocation(ctx, point)
 	if err != nil {
 		log.Fatalf("%v.GetLocation(_) = _, %v: ", client, err)
 	}
-	log.Println(feature)
+	log.Println(location)
 }
 
 func main() {
@@ -57,8 +57,8 @@ func main() {
 	client := pb.NewMatildaClient(conn)
 
 	// Looking for a valid feature
-	printFeature(client, &pb.Point{Latitude: 409146138, Longitude: -746188906})
+	printLocation(client, &pb.Point{Latitude: 409146138, Longitude: -746188906})
 
 	// Feature missing.
-	printFeature(client, &pb.Point{Latitude: 0, Longitude: 0})
+	printLocation(client, &pb.Point{Latitude: 0, Longitude: 0})
 }
