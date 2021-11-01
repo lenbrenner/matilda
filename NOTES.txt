@@ -1,0 +1,57 @@
+gRPC info:
+    https://grpc.io/docs/languages/go/basics - this is the stack I am started with
+    https://grpc.io/docs/languages/go/quickstart
+
+$ go install google.golang.org/api/cmd/protoc-gen-go@v1.26
+https://developers.google.com/protocol-buffers/docs/gotutorial
+$ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1
+protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative api/matilda.proto
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+
+Singleton manager:
+    https://github.com/eddieowens/axon
+
+Sqllite with Gorm but moving to postgres and db.sql
+    https://medium.com/avitotech/how-to-work-with-postgres-in-go-bad2dabd13e4
+
+brew install api
+> Emacs Lisp files have been installed to:
+>     /usr/local/share/emacs/site-lisp/api
+
+Emacs:
+	Enable cut and paste with aquamacs: https://emacs.stackexchange.com/questions/48607/os-copy-paste-not-working-for-emacs-mac
+	
+Install sqllite: https://flaviocopes.com/sqlite-how-to-install
+
+Thoughts:
+	Static items like posts are unmovable
+	Shelves are a static item that can contain slots
+	Within slots we can store bins or items
+	We will be tracking the pickers, pallets and the items
+	For now let's assume pickers all walk at the same pass
+	Using the graph above we should be able to calculate a path from the picker to target
+	Record the location of our pickers or items locations when a job is started or finished
+	If a picker finishes a job they should request a new job and have one presented based on location.
+	visit our locations like a graph, avoiding cycles record all paths between points upfront
+	in comparing paths we can anticipate collisions but don't get hung up on that because they are humans
+	create a random field which changes the offsets of out pickers
+	A list of products and there location: on a pallet, on a shelf, or in a bin.
+	Now create a list of things to pick and see if we can arrange there jobs efficiently.
+	Get this all to work on the cloud.
+
+This was someones neat library for building boardgames:
+    https://github.com/jkomoros/boardgame
+    https://github.com/jkomoros/boardgame/blob/master/TUTORIAL.md
+
+Good article on tags: https://medium.com/golangspec/tags-in-golang-3e5db0b8ef3e
+
+Magical comments: https://blog.jbowen.dev/2019/09/the-magic-of-go-comments
+
+Simpler JSON? https://pkg.go.dev/github.com/bitly/go-simplejson :-1
+
+Break project into: src, data/resources, ... it currently looks weird to have our json in the middle of go files
+
+interfaces and delegation: https://medium.com/code-zen/go-interfaces-and-delegation-pattern-f962c138dc1e
+
+Toggle Column Selection Mode - https://www.jetbrains.com/help/go/multicursor.html

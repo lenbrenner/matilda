@@ -8,8 +8,9 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/examples/data"
+
 	pb "takeoff.com/matilda/api"
+	"takeoff.com/matilda/data"
 )
 
 var (

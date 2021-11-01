@@ -11,13 +11,11 @@ import (
 	"net"
 	"sync"
 
-	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/examples/data"
-
 	"github.com/golang/protobuf/proto"
+	"google.golang.org/grpc/credentials"
 
-	//pb "google.golang.org/grpc/examples/route_guide/routeguide"
 	pb "takeoff.com/matilda/api"
+	"takeoff.com/matilda/data"
 )
 
 var (

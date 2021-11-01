@@ -1,44 +1,4 @@
 /*
-TODO:
-    Install sqllite: https://flaviocopes.com/sqlite-how-to-install
-	Get GORM working with sqllite for now: https://gorm.io/docs/index.html
-	Clear and populate our database
-	Load a board and create a graph of adjacent nodes
-		Static items like posts are unmovable
-    	Shelves are a static item that can contain slots
-		Within slots we can store bins or items
-	We will be tracking the pickers, pallets and the items
-		For now let's assume pickers all walk at the same pass
-		Using the graph above we should be able to calculate a path from the picker to target
-		Record the location of our pickers or items locations when a job is started or finished
-		If a picker finishes a job they should request a new job and have one presented based on location.
-		visit our locations like a graph, avoiding cycles record all paths between points upfront
-		in comparing paths we can anticipate collisions but don't get hung up on that because they are humans
-		create a random field which changes the offsets of out pickers
-	A list of products and there location: on a pallet, on a shelf, or in a bin.
-	Now create a list of things to pick and see if we can arrange there jobs efficiently.
-	Try to build a display using:
-		https://github.com/jkomoros/boardgame
-		https://github.com/jkomoros/boardgame/blob/master/TUTORIAL.md
-	https://github.com/eddieowens/axon
-	Get this all to work on the cloud.
-	Good article on tags: https://medium.com/golangspec/tags-in-golang-3e5db0b8ef3e
-	Magical comments: https://blog.jbowen.dev/2019/09/the-magic-of-go-comments
-	Simpler JSON? https://pkg.go.dev/github.com/bitly/go-simplejson
-	Break project into: src, data/resources, ... it currently looks weird to have our json in the middle of go files
-	interfaces and delegation: https://medium.com/code-zen/go-interfaces-and-delegation-pattern-f962c138dc1e
-    gRPC info:
-    	https://grpc.io/docs/languages/go/basics - this is the stack I am started with
-		https://grpc.io/docs/languages/go/quickstart
-	brew install api
-	> Emacs Lisp files have been installed to:
-  	>     /usr/local/share/emacs/site-lisp/api
-        $ go install google.golang.org/api/cmd/protoc-gen-go@v1.26
-	https://developers.google.com/protocol-buffers/docs/gotutorial
-	$ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.1
-	protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative api/matilda.proto
-    export GOPATH=$HOME/go
-    export PATH=$PATH:$GOPATH/bin
 */
 
 //Create some locations
