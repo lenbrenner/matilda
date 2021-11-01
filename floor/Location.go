@@ -2,13 +2,11 @@ package floor
 
 import (
 	"fmt"
-	"gorm.io/gorm"
 )
 
 type LocationLabel string
 
 type Location struct {
-	gorm.Model
 	Label       LocationLabel
 	Transitions map[Direction]LocationLabel
 }

@@ -19,6 +19,11 @@ brew install api
 > Emacs Lisp files have been installed to:
 >     /usr/local/share/emacs/site-lisp/api
 
+//Use stack builder to setup postgres: https://content-www.enterprisedb.com/downloads/postgres-postgresql-downloads
+//CREATE DATABASE yourdbname;
+//CREATE USER youruser WITH ENCRYPTED PASSWORD 'yourpass';
+//GRANT ALL PRIVILEGES ON DATABASE yourdbname TO youruser;
+
 Emacs:
 	Enable cut and paste with aquamacs: https://emacs.stackexchange.com/questions/48607/os-copy-paste-not-working-for-emacs-mac
 	
