@@ -18,10 +18,9 @@ import (
 	"os"
 	"takeoff.com/matilda/util"
 
-	"takeoff.com/matilda/floor"
 )
 
-func pathsTo(location floor.Location, destination floor.Location) {
+func pathsTo(location Location, destination Location) {
 	//fmt.Printf("Searching for paths from %v to %v")
 	//seen := map[LocationLabel]bool{}
 	for direction, label := range location.Transitions {
@@ -31,7 +30,7 @@ func pathsTo(location floor.Location, destination floor.Location) {
 	}
 }
 
-type locationArray []floor.Location
+type locationArray []Location
 
 type Direction int
 
@@ -43,6 +42,7 @@ const (
 )
 
 //TODO - get json to serialize using strings below.
+//TODO - look for a way that avoids repeating ourselves.
 func (d Direction) String() string {
 	return [...]string{"North", "South", "East", "West"}[d]
 }
