@@ -12,12 +12,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/eddieowens/axon"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"log"
 	"os"
 	"takeoff.com/matilda/util"
-
 )
 
 func pathsTo(location Location, destination Location) {
@@ -144,7 +144,7 @@ func (TransitionDao) Insert(tx sqlx.Tx, locationId int, transition Transition) {
 }
 
 type DoSomethingService struct {
-	db sqlx.DB
+	db sqlx.DB `inject:"db"`
 }
 func (service DoSomethingService) DoSomething() {
 	var locationDao LocationDao
@@ -177,7 +177,7 @@ func (service DoSomethingService) DoSomething() {
 	tx.Commit()
 }
 
-func main() {
+func xmain() {
 	//gormExample()
 	//barr, _ := json.MarshalIndent(locations, "", "    ")
 	//fmt.Println(string(barr))
@@ -191,4 +191,55 @@ func main() {
 
 	service := DoSomethingService{db: *db}
 	service.DoSomething()
+}
+
+type Starter interface {
+	Start()
+}
+
+type Car struct {
+	Engine Starter `inject:"Engine"`
+}
+
+func (c *Car) Start() {
+	fmt.Println("Starting the Car!")
+	c.Engine.Start()
+}
+
+type Engine struct {
+	FuelInjector Starter `inject:"FuelInjector"`
+}
+
+func (e *Engine) Start() {
+	fmt.Println("Starting the Engine!")
+	e.FuelInjector.Start()
+}
+
+type FuelInjector struct {
+}
+
+func (*FuelInjector) Start() {
+	fmt.Println("Starting the FuelInjector!")
+}
+
+func CarFactory(_ axon.Injector, _ axon.Args) axon.Instance {
+	fmt.Println("Hey, a new Car is being made!")
+	return axon.StructPtr(new(Car))
+}
+
+func main() {
+	binder := axon.NewBinder(axon.NewPackage(
+		axon.Bind("Car").To().Factory(CarFactory).WithoutArgs(),
+		axon.Bind("Engine").To().StructPtr(new(Engine)),
+		axon.Bind("FuelInjector").To().StructPtr(new(FuelInjector)),
+	))
+
+	injector := axon.NewInjector(binder)
+
+	// Prints:
+	// Hey, a new Car is being made!
+	// Starting the Car!
+	// Starting the Engine!
+	// Starting the FuelInjector!
+	injector.GetStructPtr("Car").(Starter).Start()
 }
