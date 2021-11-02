@@ -31,7 +31,7 @@ func pathsTo(location model.Location, destination model.Location) {
 }
 
 type DoSomethingService struct {
-	db sqlx.DB `inject:"Db"`
+	DB *sqlx.DB `inject:"Db"`
 }
 func (service DoSomethingService) DoSomething() {
 	var locationDao daos.LocationDao
@@ -46,7 +46,7 @@ func (service DoSomethingService) DoSomething() {
 		os.Exit(1)
 	}
 
-	tx := service.db.MustBegin()
+	tx := service.DB.MustBegin()
 	for i, location := range plan.Locations {
 		fmt.Printf("%v %v\n", i, location)
 		locationId := locationDao.Insert(*tx, location)
@@ -66,8 +66,8 @@ func (service DoSomethingService) DoSomething() {
 
 //func xmain() {
 //	//Todo - inject this through singleton manager
-//	db := DatabaseFactory()
-//	Service := DoSomethingService{db: *db}
+//	DB := DatabaseFactory()
+//	Service := DoSomethingService{DB: *DB}
 //	Service.DoSomething()
 //}
 
@@ -106,7 +106,7 @@ func CarFactory(_ axon.Injector, args axon.Args) axon.Instance {
 
 type Application struct {
 	Car *Car `inject:"Car"` //Todo - Try for something like Car.InjectTag
-	//Service *DoSomethingService `inject:"DoSomethingService"`
+	Service *DoSomethingService `inject:"DoSomethingService"`
 }
 
 //Todo - Read this https://tutorialedge.net/golang/the-go-init-function
@@ -116,8 +116,8 @@ func initApplication() *Application {
 		axon.Bind("Car").To().Factory(CarFactory).WithArgs(axon.Args{os.Getenv("CAR_LOCK_CODE")}),
 		axon.Bind("Engine").To().StructPtr(new(Engine)),
 		axon.Bind("FuelInjector").To().StructPtr(new(FuelInjector)),
-		//axon.Bind("Db").To().Factory(DatabaseFactory).WithoutArgs(),
-		//axon.Bind("DoSomethingService").To().StructPtr(new(DoSomethingService)),
+		axon.Bind("Db").To().Factory(DatabaseFactory).WithoutArgs(),
+		axon.Bind("DoSomethingService").To().StructPtr(new(DoSomethingService)),
 	))
 	injector := axon.NewInjector(binder)
 	return injector.GetStructPtr("Application").(*Application)
@@ -127,7 +127,7 @@ func main() {
 	var app = initApplication()
 	app.Car.Start()
 	fmt.Println(app.Car.LockCode)
-	//app.Service.DoSomething()
+	app.Service.DoSomething()
 }
 
 type Starter interface {
