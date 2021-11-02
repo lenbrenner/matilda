@@ -53,12 +53,17 @@ type Plan struct {
 
 type LocationLabel string
 
+type LocationId int
 type Location struct {
+	ID          LocationId
 	Label       LocationLabel
 	Transitions []Transition
 }
 
+type TransitionId int
 type Transition struct {
+	ID 			TransitionId
+	LocationId  LocationId
 	Direction   Direction
 	Destination LocationLabel
 }
@@ -99,13 +104,16 @@ func (plan *Plan) LoadJson(filename string) error {
 	}
 }
 
-type IDao interface {
-	InsertLocation(sqlx.Tx, Location)
+type Crud interface {
+	Insert(sqlx.Tx, Location)
+}
+type Dao struct{
+	Location LocationDao
+	Transition TransitionDao
 }
 
-type Dao struct{}
-
-func (dao Dao) InsertLocation(tx sqlx.Tx, location Location) int {
+type LocationDao struct {}
+func (LocationDao) Insert(tx sqlx.Tx, location Location) int {
 	stmt, err := tx.PrepareNamed("INSERT INTO location (label) VALUES (:label) RETURNING id")
 	var id int
 	err = stmt.Get(&id, location)
@@ -114,8 +122,26 @@ func (dao Dao) InsertLocation(tx sqlx.Tx, location Location) int {
 	}
 	return id
 }
+func (LocationDao) Get(tx sqlx.Tx) []Location {
+	locations := []Location{}
+	tx.Select(&locations, "SELECT * FROM location ORDER BY label ASC")
+	return locations
+}
+func (LocationDao) Map(tx sqlx.Tx) {
+	// Loop through rows using only one struct
+	location := Location{}
+	rows, _ := tx.Queryx("SELECT id, label FROM location")
+	for rows.Next() {
+		err := rows.StructScan(&location)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		fmt.Printf("%#v\n", location)
+	}
+}
 
-func (dao Dao) InsertTransition(tx sqlx.Tx, locationId int, transition Transition) {
+type TransitionDao struct {}
+func (TransitionDao) Insert(tx sqlx.Tx, locationId int, transition Transition) {
 	tx.MustExec("INSERT INTO transition (location_id, direction, destination) VALUES ($1, $2, $3)",
 		locationId, transition.Direction, transition.Destination)
 }
@@ -145,11 +171,16 @@ func main() {
 	tx := db.MustBegin()
 	for i, location := range plan.Locations {
 		fmt.Printf("%v %v\n", i, location)
-		locationId := dao.InsertLocation(*tx, location)
+		locationId := dao.Location.Insert(*tx, location)
 		for _, transition := range location.Transitions {
-			dao.InsertTransition(*tx, locationId, transition)
+			dao.Transition.Insert(*tx, locationId, transition)
 		}
 		fmt.Printf("%v", locationId)
+	}
+	dao.Location.Map(*tx)
+	locations := dao.Location.Get(*tx)
+	for _, location := range locations {
+		fmt.Println(location.Label)
 	}
 	tx.Commit()
 
