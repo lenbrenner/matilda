@@ -30,24 +30,8 @@ func pathsTo(location model.Location, destination model.Location) {
 	}
 }
 
-
-var schema = `
-CREATE SEQUENCE location_id_seq;
-CREATE TABLE location (
-	id INT NOT NULL DEFAULT NEXTVAL('location_id_seq'), 
-    label text
-);
-
-CREATE SEQUENCE transition_id_seq;
-CREATE TABLE transition (
-	id INT NOT NULL DEFAULT NEXTVAL('transition_id_seq'),
-	location_id INT, 
-    direction INT,
-    destination text
-);`
-
 type DoSomethingService struct {
-	db sqlx.DB `inject:"db"`
+	db sqlx.DB `inject:"Db"`
 }
 func (service DoSomethingService) DoSomething() {
 	var locationDao daos.LocationDao
@@ -80,20 +64,70 @@ func (service DoSomethingService) DoSomething() {
 	tx.Commit()
 }
 
-func xmain() {
-	//gormExample()
-	//barr, _ := json.MarshalIndent(locations, "", "    ")
-	//fmt.Println(string(barr))
-	//Todo - inject this through singleton manager
+//func xmain() {
+//	//Todo - inject this through singleton manager
+//	db := DatabaseFactory()
+//	Service := DoSomethingService{db: *db}
+//	Service.DoSomething()
+//}
+
+func DatabaseFactory(_ axon.Injector, args axon.Args) axon.Instance {
+	var schema = `
+CREATE SEQUENCE location_id_seq;
+CREATE TABLE location (
+	id INT NOT NULL DEFAULT NEXTVAL('location_id_seq'), 
+    label text
+);
+
+CREATE SEQUENCE transition_id_seq;
+CREATE TABLE transition (
+	id INT NOT NULL DEFAULT NEXTVAL('transition_id_seq'),
+	location_id INT, 
+    direction INT,
+    destination text
+);`
+
 	db, err := sqlx.Connect("postgres", "user=test dbname=test sslmode=disable")
 	if err != nil {
 		log.Fatalln(err)
 	}
 	db.MustExec("DROP OWNED BY test")
 	db.MustExec(schema)
+	return axon.StructPtr(db)
+}
 
-	service := DoSomethingService{db: *db}
-	service.DoSomething()
+func CarFactory(_ axon.Injector, args axon.Args) axon.Instance {
+	fmt.Println("Hey, a new Car is being made!")
+	return axon.StructPtr(
+		&Car{
+			LockCode: args.String(0),
+		})
+}
+
+type Application struct {
+	Car *Car `inject:"Car"` //Todo - Try for something like Car.InjectTag
+	//Service *DoSomethingService `inject:"DoSomethingService"`
+}
+
+//Todo - Read this https://tutorialedge.net/golang/the-go-init-function
+func initApplication() *Application {
+	binder := axon.NewBinder(axon.NewPackage(
+		axon.Bind("Application").To().StructPtr(new(Application)),
+		axon.Bind("Car").To().Factory(CarFactory).WithArgs(axon.Args{os.Getenv("CAR_LOCK_CODE")}),
+		axon.Bind("Engine").To().StructPtr(new(Engine)),
+		axon.Bind("FuelInjector").To().StructPtr(new(FuelInjector)),
+		//axon.Bind("Db").To().Factory(DatabaseFactory).WithoutArgs(),
+		//axon.Bind("DoSomethingService").To().StructPtr(new(DoSomethingService)),
+	))
+	injector := axon.NewInjector(binder)
+	return injector.GetStructPtr("Application").(*Application)
+}
+
+func main() {
+	var app = initApplication()
+	app.Car.Start()
+	fmt.Println(app.Car.LockCode)
+	//app.Service.DoSomething()
 }
 
 type Starter interface {
@@ -124,24 +158,4 @@ type FuelInjector struct {
 
 func (*FuelInjector) Start() {
 	fmt.Println("Starting the FuelInjector!")
-}
-
-func CarFactory(_ axon.Injector, args axon.Args) axon.Instance {
-	fmt.Println("Hey, a new Car is being made!")
-	return axon.StructPtr(
-			&Car{
-				LockCode: args.String(0),
-			})
-}
-
-func main() {
-	binder := axon.NewBinder(axon.NewPackage(
-		axon.Bind("Car").To().Factory(CarFactory).WithArgs(axon.Args{os.Getenv("CAR_LOCK_CODE")}),
-		axon.Bind("Engine").To().StructPtr(new(Engine)),
-		axon.Bind("FuelInjector").To().StructPtr(new(FuelInjector)),
-	))
-	injector := axon.NewInjector(binder)
-	car := injector.GetStructPtr("Car").(*Car)
-	car.Start()
-	fmt.Println(car.LockCode)
 }
