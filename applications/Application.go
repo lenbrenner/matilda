@@ -4,6 +4,7 @@ import (
 	"github.com/eddieowens/axon"
 	_ "github.com/lib/pq"
 	"os"
+	"takeoff.com/matilda/daos"
 	"takeoff.com/matilda/services"
 )
 
@@ -17,6 +18,8 @@ func InitApplication() *Application {
 		axon.Bind("Application").To().StructPtr(new(Application)),
 		axon.Bind("Db").To().Factory(databaseFactory).WithArgs(axon.Args{os.Getenv("DB_INSTANCE_NAME")}),
 		axon.Bind("DoSomethingService").To().StructPtr(new(services.DoSomethingService)),
+		axon.Bind("LocationDao").To().StructPtr(new(daos.LocationDao)),
+		axon.Bind("TransitionDao").To().StructPtr(new(daos.TransitionDao)),
 	))
 	injector := axon.NewInjector(binder)
 	return injector.GetStructPtr("Application").(*Application)
