@@ -12,6 +12,7 @@ require (
 )
 
 require (
+	github.com/eddieowens/axon v0.6.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.2 // indirect
 	github.com/jmoiron/sqlx v1.3.4 // indirect
