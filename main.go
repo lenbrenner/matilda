@@ -11,11 +11,13 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"log"
 	"os"
+	"takeoff.com/matilda/util"
 
 	"takeoff.com/matilda/floor"
 )
@@ -32,11 +34,60 @@ func pathsTo(location floor.Location, destination floor.Location) {
 
 type locationArray []floor.Location
 
+type Direction int
+
+const (
+	North Direction = iota
+	South
+	East
+	West
+)
+
+func (d Direction) String() string {
+	return [...]string{"North", "South", "East", "West"}[d]
+}
+
+type Plan struct {
+	Locations []Location
+}
+
+type LocationLabel string
+
+type Transition struct {
+	Direction Direction
+	Destination LocationLabel
+}
+type Location struct {
+	Label       LocationLabel
+	Transitions []Transition
+}
+
+func (location Location) String() string {
+	directions := func(location Location) []string {
+		var transitions []string
+		for key, value := range location.Transitions {
+			transitions = append(transitions, fmt.Sprintf("(%v) => %v", key, value))
+		}
+		return transitions
+	}
+	return fmt.Sprintf("%v: %q", location.Label, directions(location))
+}
+
+func (plan *Plan) LoadJson(filename string) error {
+	dat, err := util.Resource(fmt.Sprintf("maps/%s.json", filename))
+	if err == nil {
+		err := json.Unmarshal(dat, &plan)
+		return err
+	} else {
+		return err
+	}
+}
+
 func main() {
 	//gormExample()
 	//barr, _ := json.MarshalIndent(locations, "", "    ")
 	//fmt.Println(string(barr))
-	var plan floor.Plan
+	var plan Plan
 	err := plan.LoadJson("3x3_floor")
 	if err != nil {
 		fmt.Println(err)
@@ -44,11 +95,6 @@ func main() {
 	}
 	for i, location := range plan.Locations {
 		fmt.Printf("%v %v\n", i, location)
-		//for j, destination := range locations {
-		//	if i!=j {
-		//		location.pathsTo(destination)
-		//	}
-		//}
 	}
 }
 
