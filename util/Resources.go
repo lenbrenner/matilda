@@ -5,9 +5,13 @@ import (
 	"os"
 )
 
-func Resource(path string) ([]byte, error) {
+func ResourcePath(path string) string {
 	pwd, _ := os.Getwd()
-	dat, err := os.ReadFile(fmt.Sprintf("%s/%s", pwd, path))
+	return fmt.Sprintf("%s/%s", pwd, path)
+}
+
+func Resource(path string) ([]byte, error) {
+	dat, err := os.ReadFile(ResourcePath(path))
 	if err != nil {
 		fmt.Printf("Crash: %s", err)
 		os.Exit(1)

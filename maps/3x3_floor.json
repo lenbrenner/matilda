@@ -2,72 +2,72 @@
   "Locations": [
     {
       "Label": "A1",
-      "Transitions": {
-        "1": "B1",
-        "2": "A2"
-      }
+      "Transitions": [
+        {"Direction": 1, "Destination" : "B1"},
+        {"Direction": 2, "Destination" : "A2"}
+      ]
     },
     {
       "Label": "A2",
-      "Transitions": {
-        "1": "B2",
-        "2": "A3",
-        "3": "A1"
-      }
+      "Transitions": [
+        {"Direction": 1, "Destination": "B2"},
+        {"Direction": 2, "Destination": "A3"},
+        {"Direction": 3, "Destination": "A1"}
+      ]
     },
     {
       "Label": "A3",
-      "Transitions": {
-        "1": "B3",
-        "3": "A2"
-      }
+      "Transitions": [
+        {"Direction": 1, "Destination" : "B3"},
+        {"Direction": 3, "Destination" : "A2"}
+      ]
     },
     {
       "Label": "B1",
-      "Transitions": {
-        "0": "A1",
-        "1": "C1",
-        "2": "B2"
-      }
+      "Transitions": [
+        {"Direction": 0, "Destination": "A1"},
+        {"Direction": 1, "Destination": "C1"},
+        {"Direction": 2, "Destination": "B2"}
+      ]
     },
     {
       "Label": "B2",
-      "Transitions": {
-        "0": "A2",
-        "1": "C2",
-        "2": "B3",
-        "3": "B1"
-      }
+      "Transitions": [
+        {"Direction": 0, "Destination": "A2"},
+        {"Direction": 1, "Destination": "C2"},
+        {"Direction": 2, "Destination": "B3"},
+        {"Direction": 3, "Destination": "A1"}
+      ]
     },
     {
       "Label": "B3",
-      "Transitions": {
-        "0": "A3",
-        "1": "C3",
-        "3": "B2"
-      }
+      "Transitions": [
+        {"Direction": 0, "Destination": "A3"},
+        {"Direction": 1, "Destination": "C3"},
+        {"Direction": 3, "Destination": "B2"}
+      ]
     },
     {
       "Label": "C1",
-      "Transitions": {
-        "0": "B1",
-        "2": "A2"
-      }
+      "Transitions": [
+        {"Direction": 0, "Destination": "B1"},
+        {"Direction": 2, "Destination": "A2"}
+      ]
     },
     {
       "Label": "C2",
-      "Transitions": {
-        "0": "B2",
-        "2": "A3",
-        "3": "A1"
-      }
+      "Transitions": [
+        {"Direction": 0, "Destination": "B2"},
+        {"Direction": 2, "Destination": "A3"},
+        {"Direction": 3, "Destination": "A1"}
+      ]
     },
     {
       "Label": "C3",
-      "Transitions": {
-        "0": "B3",
-        "3": "A2"
-      }
+      "Transitions": [
+        {"Direction": 0, "Destination": "B3"},
+        {"Direction": 3, "Destination": "A2"}
+      ]
     }
   ]
 }

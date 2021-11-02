@@ -1,0 +1,8 @@
+Implements CRUD through gRPC
+
+The stack already contains examples of gRPC and Gorm in action. Here are some goals:
+populate DB from a remote client
+    align entities(stuff in the DB) with resources)stuff available through API)
+    create a client to use protobuf code
+    load data from the client into the DB
+    store the data from the DB to a file on the client machine

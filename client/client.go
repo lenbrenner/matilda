@@ -8,8 +8,9 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/examples/data"
-	pb "takeoff.com/matilda/api"
+
+	"takeoff.com/matilda/data"
+	pb "takeoff.com/matilda/resources"
 )
 
 var (
@@ -19,16 +20,16 @@ var (
 	serverHostOverride = flag.String("server_host_override", "x.test.example.com", "The server name used to verify the hostname returned by the TLS handshake")
 )
 
-// printFeature gets the feature for the given point.
-func printFeature(client pb.MatildaClient, point *pb.Point) {
-	log.Printf("Getting feature for point (%d, %d)", point.Latitude, point.Longitude)
+// printLocation gets the feature for the given point.
+func printLocation(client pb.MatildaClient, point *pb.Point) {
+	log.Printf("Getting location for point (%d, %d)", point.Latitude, point.Longitude)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	feature, err := client.GetSquare(ctx, point)
+	location, err := client.GetLocation(ctx, point)
 	if err != nil {
-		log.Fatalf("%v.GetFeatures(_) = _, %v: ", client, err)
+		log.Fatalf("%v.GetLocation(_) = _, %v: ", client, err)
 	}
-	log.Println(feature)
+	log.Println(location)
 }
 
 func main() {
@@ -56,8 +57,8 @@ func main() {
 	client := pb.NewMatildaClient(conn)
 
 	// Looking for a valid feature
-	printFeature(client, &pb.Point{Latitude: 409146138, Longitude: -746188906})
+	printLocation(client, &pb.Point{Latitude: 409146138, Longitude: -746188906})
 
 	// Feature missing.
-	printFeature(client, &pb.Point{Latitude: 0, Longitude: 0})
+	printLocation(client, &pb.Point{Latitude: 0, Longitude: 0})
 }

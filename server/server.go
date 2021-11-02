@@ -11,13 +11,12 @@ import (
 	"net"
 	"sync"
 
-	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/examples/data"
-
 	"github.com/golang/protobuf/proto"
+	"google.golang.org/grpc/credentials"
 
-	//pb "google.golang.org/grpc/examples/route_guide/routeguide"
-	pb "takeoff.com/matilda/api"
+	"takeoff.com/matilda/data"
+	pb "takeoff.com/matilda/resources"
+	"takeoff.com/matilda/util"
 )
 
 var (
@@ -30,24 +29,24 @@ var (
 
 type matildaServer struct {
 	pb.UnimplementedMatildaServer
-	savedFeatures []*pb.Square // read-only after initialized
+	savedLocations []*pb.Location // read-only after initialized
 
 	mu         sync.Mutex // protects routeNotes
 }
 
 // GetFeature returns the feature at the given point.
-func (s *matildaServer) GetSquare(ctx context.Context, point *pb.Point) (*pb.Square, error) {
-	for _, feature := range s.savedFeatures {
-		if proto.Equal(feature.Location, point) {
-			return feature, nil
+func (s *matildaServer) GetLocation(ctx context.Context, point *pb.Point) (*pb.Location, error) {
+	for _, location := range s.savedLocations {
+		if proto.Equal(location.Location, point) {
+			return location, nil
 		}
 	}
-	// No feature was found, return an unnamed feature
-	return &pb.Square{Location: point}, nil
+	// No location was found, return an unnamed location
+	return &pb.Location{Location: point}, nil
 }
 
-// loadSquares loads features from a JSON file.
-func (s *matildaServer) loadSquares(filePath string) {
+// loadLocations loads features from a JSON file.
+func (s *matildaServer) loadLocations(filePath string) {
 	var data []byte
 	if filePath != "" {
 		var err error
@@ -55,17 +54,18 @@ func (s *matildaServer) loadSquares(filePath string) {
 		if err != nil {
 			log.Fatalf("Failed to load default features: %v", err)
 		}
-	} else {
-		data = exampleData
 	}
-	if err := json.Unmarshal(data, &s.savedFeatures); err != nil {
+	if err := json.Unmarshal(data, &s.savedLocations); err != nil {
 		log.Fatalf("Failed to load default features: %v", err)
 	}
+	fmt.Println("hello")
 }
 
 func newServer() *matildaServer {
 	s := &matildaServer{}
-	s.loadSquares(*jsonDBFile)
+	//s.loadLocations(*jsonDBFile)
+	resourcePath := util.ResourcePath("maps/lat_lon_floor.json")
+	s.loadLocations(resourcePath)
 	return s
 }
 
@@ -93,62 +93,3 @@ func main() {
 	pb.RegisterMatildaServer(grpcServer, newServer())
 	grpcServer.Serve(lis)
 }
-
-//Todo - move to floor 3x3_floor.json
-var exampleData = []byte(`[
-{
-    "location": {
-        "latitude": 401827388,
-        "longitude": -740294537
-    },
-    "name": "A1"
-}, {
-    "location": {
-        "latitude": 410564152,
-        "longitude": -743685054
-    },
-    "name": "A2"
-}, {
-    "location": {
-        "latitude": 408472324,
-        "longitude": -740726046
-    },
-    "name": "A3"
-}, {
-    "location": {
-        "latitude": 412452168,
-        "longitude": -740214052
-    },
-    "name": "B1"
-}, {
-    "location": {
-        "latitude": 409146138,
-        "longitude": -746188906
-    },
-    "name": "B2"
-}, {
-    "location": {
-        "latitude": 404701380,
-        "longitude": -744781745
-    },
-    "name": "B3"
-}, {
-    "location": {
-        "latitude": 409642566,
-        "longitude": -746017679
-    },
-    "name": "C1"
-}, {
-    "location": {
-        "latitude": 408031728,
-        "longitude": -748645385
-    },
-    "name": "C2"
-}, {
-    "location": {
-        "latitude": 413700272,
-        "longitude": -742135189
-    },
-    "name": "C3"
-}
-]`)

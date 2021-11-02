@@ -34,3 +34,8 @@ and
 ```sh
 $ go run client/client.go -tls=true
 ```
+                              
+The stack is composed of:
+    gRPC
+    sqlx
+    Postgres
