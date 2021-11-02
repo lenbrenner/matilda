@@ -198,6 +198,7 @@ type Starter interface {
 }
 
 type Car struct {
+	LockCode string
 	Engine Starter `inject:"Engine"`
 }
 
@@ -222,24 +223,22 @@ func (*FuelInjector) Start() {
 	fmt.Println("Starting the FuelInjector!")
 }
 
-func CarFactory(_ axon.Injector, _ axon.Args) axon.Instance {
+func CarFactory(_ axon.Injector, args axon.Args) axon.Instance {
 	fmt.Println("Hey, a new Car is being made!")
-	return axon.StructPtr(new(Car))
+	return axon.StructPtr(
+			&Car{
+				LockCode: args.String(0),
+			})
 }
 
 func main() {
 	binder := axon.NewBinder(axon.NewPackage(
-		axon.Bind("Car").To().Factory(CarFactory).WithoutArgs(),
+		axon.Bind("Car").To().Factory(CarFactory).WithArgs(axon.Args{os.Getenv("CAR_LOCK_CODE")}),
 		axon.Bind("Engine").To().StructPtr(new(Engine)),
 		axon.Bind("FuelInjector").To().StructPtr(new(FuelInjector)),
 	))
-
 	injector := axon.NewInjector(binder)
-
-	// Prints:
-	// Hey, a new Car is being made!
-	// Starting the Car!
-	// Starting the Engine!
-	// Starting the FuelInjector!
-	injector.GetStructPtr("Car").(Starter).Start()
+	car := injector.GetStructPtr("Car").(*Car)
+	car.Start()
+	fmt.Println(car.LockCode)
 }
