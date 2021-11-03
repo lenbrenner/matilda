@@ -16,19 +16,28 @@ type Application struct {
 	LocationService *services.LocationService `inject:"LocationService"`
 }
 
-//Todo - Read this https://tutorialedge.net/golang/the-go-init-function
-func InitApplication() *Application {
+var application *Application
+func init() {
 	binder := axon.NewBinder(axon.NewPackage(
-		axon.Bind("Application").To().StructPtr(new(Application)),
-		axon.Bind("Db").To().Factory(databaseFactory).WithArgs(axon.Args{os.Getenv("DB_INSTANCE_NAME")}),
-		axon.Bind("LocationService").To().StructPtr(new(services.LocationService)),
-		axon.Bind("LocationDao").To().StructPtr(new(daos.LocationDao)),
-		axon.Bind("TransitionDao").To().StructPtr(new(daos.TransitionDao)),
+		axon.Bind("Application").
+			To().StructPtr(new(Application)),
+		axon.Bind("Db").
+			To().Factory(databaseFactory).
+			WithArgs(axon.Args{os.Getenv("DB_INSTANCE_NAME")}),
+		axon.Bind("LocationService").
+			To().StructPtr(new(services.LocationService)),
+		axon.Bind("LocationDao").
+			To().StructPtr(new(daos.LocationDao)),
+		axon.Bind("TransitionDao").
+			To().StructPtr(new(daos.TransitionDao)),
 	))
 	injector := axon.NewInjector(binder)
-	app := injector.GetStructPtr("Application").(*Application)
-	app.LoadPlan("3x3_floor")
-	return app
+	application = injector.GetStructPtr("Application").(*Application)
+	application.LoadPlan("3x3_floor")
+}
+
+func Get() Application {
+	return *application
 }
 
 func (app Application) LoadPlan(filename string) {
