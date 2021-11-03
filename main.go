@@ -17,5 +17,5 @@ import (
 
 func main() {
 	var app = applications.InitApplication()
-	app.Service.DoSomething()
+	app.LocationService.Display()
 }
