@@ -13,6 +13,7 @@ require (
 
 require (
 	github.com/mattn/go-sqlite3 v1.14.9 // indirect
+	github.com/thoas/go-funk v0.9.1 // indirect
 	golang.org/x/net v0.0.0-20200822124328-c89045814202 // indirect
 	golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd // indirect
 	golang.org/x/text v0.3.2 // indirect
