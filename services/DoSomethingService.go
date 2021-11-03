@@ -9,10 +9,11 @@ import (
 )
 
 type DoSomethingService struct {
-	DB *sqlx.DB `inject:"Db"`
-	locationDao daos.LocationDao `inject:LocationDao`
+	DB            *sqlx.DB           `inject:"Db"`
+	locationDao   daos.LocationDao   `inject:LocationDao`
 	transitionDao daos.TransitionDao `inject:LocationDao`
 }
+
 func (service DoSomethingService) DoSomething() {
 	// exec the schema or fail; multi-statement Exec behavior varies between
 	// database drivers;  pq will exec them all, sqlite3 won't, ymmv
@@ -22,7 +23,6 @@ func (service DoSomethingService) DoSomething() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
 	tx := service.DB.MustBegin()
 	for i, location := range plan.Locations {
 		fmt.Printf("%v %v\n", i, location)
@@ -40,4 +40,3 @@ func (service DoSomethingService) DoSomething() {
 	}
 	tx.Commit()
 }
-
