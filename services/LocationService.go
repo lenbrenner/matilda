@@ -8,13 +8,13 @@ import (
 	"takeoff.com/matilda/model"
 )
 
-type DoSomethingService struct {
+type LocationService struct {
 	DB            *sqlx.DB           `inject:"Db"`
 	locationDao   daos.LocationDao   `inject:LocationDao`
 	transitionDao daos.TransitionDao `inject:LocationDao`
 }
 
-func (service DoSomethingService) DoSomething() {
+func (service LocationService) DoSomething() {
 	// exec the schema or fail; multi-statement Exec behavior varies between
 	// database drivers;  pq will exec them all, sqlite3 won't, ymmv
 	var plan model.Plan
@@ -28,7 +28,7 @@ func (service DoSomethingService) DoSomething() {
 	tx.Commit()
 }
 
-func (service DoSomethingService) Load(tx *sqlx.Tx, locations []model.Location) {
+func (service LocationService) Load(tx *sqlx.Tx, locations []model.Location) {
 	for _, location := range locations {
 		locationId := service.locationDao.Insert(*tx, location)
 		for _, transition := range location.Transitions {
@@ -36,7 +36,8 @@ func (service DoSomethingService) Load(tx *sqlx.Tx, locations []model.Location) 
 		}
 	}
 }
-func (service DoSomethingService) DoSomethingElse() {
+
+func (service LocationService) DoSomethingElse() {
 	tx := service.DB.MustBegin()
 	service.locationDao.Map(*tx)
 	locations := service.locationDao.GetAll(*tx)
