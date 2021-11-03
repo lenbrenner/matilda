@@ -1,9 +1,7 @@
 package model
 
 import (
-	"encoding/json"
 	"fmt"
-	"takeoff.com/matilda/util"
 )
 
 type locationArray []Location
@@ -25,15 +23,6 @@ func (d Direction) String() string {
 
 type Plan struct {
 	Locations []Location
-}
-func (plan *Plan) LoadJson(filename string) error {
-	dat, err := util.Resource(fmt.Sprintf("maps/%s.json", filename))
-	if err == nil {
-		err := json.Unmarshal(dat, &plan)
-		return err
-	} else {
-		return err
-	}
 }
 
 type LocationLabel string

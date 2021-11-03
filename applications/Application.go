@@ -1,6 +1,7 @@
 package applications
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/eddieowens/axon"
 	_ "github.com/lib/pq"
@@ -8,6 +9,7 @@ import (
 	"takeoff.com/matilda/daos"
 	"takeoff.com/matilda/model"
 	"takeoff.com/matilda/services"
+	"takeoff.com/matilda/util"
 )
 
 type Application struct {
@@ -25,7 +27,7 @@ func InitApplication() *Application {
 	))
 	injector := axon.NewInjector(binder)
 	app := injector.GetStructPtr("Application").(*Application)
-	app.LocationService.LoadFromFile("3x3_floor")
+	app.LoadPlan("3x3_floor")
 	return app
 }
 
@@ -33,10 +35,20 @@ func (app Application) LoadPlan(filename string) {
 	// exec the schema or fail; multi-statement Exec behavior varies between
 	// database drivers;  pq will exec them all, sqlite3 won't, ymmv
 	var plan model.Plan
-	err := plan.LoadJson(filename)
+	err := LoadJson(filename, &plan)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 	app.LocationService.LoadAll(plan.Locations)
+}
+
+func LoadJson(filename string, plan *model.Plan) error {
+	dat, err := util.LoadPlan(fmt.Sprintf("maps/%s.json", filename))
+	if err == nil {
+		err := json.Unmarshal(dat, &plan)
+		return err
+	} else {
+		return err
+	}
 }
