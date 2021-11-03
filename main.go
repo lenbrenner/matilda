@@ -5,5 +5,6 @@ import (
 )
 
 func main() {
-	applications.Get().LocationService.Display()
+	app := applications.Get()
+	app.LocationService.Display()
 }

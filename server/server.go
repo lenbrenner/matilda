@@ -5,18 +5,15 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/golang/protobuf/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"io/ioutil"
 	"log"
 	"net"
-	"sync"
-
-	"github.com/golang/protobuf/proto"
-	"google.golang.org/grpc/credentials"
 
 	"takeoff.com/matilda/data"
 	pb "takeoff.com/matilda/resources"
-	"takeoff.com/matilda/util"
 )
 
 var (
@@ -29,12 +26,9 @@ var (
 
 type matildaServer struct {
 	pb.UnimplementedMatildaServer
-	savedLocations []*pb.Location // read-only after initialized
-
-	mu         sync.Mutex // protects routeNotes
+	savedLocations []*pb.Location
 }
 
-// GetFeature returns the feature at the given point.
 func (s *matildaServer) GetLocation(ctx context.Context, point *pb.Point) (*pb.Location, error) {
 	for _, location := range s.savedLocations {
 		if proto.Equal(location.Location, point) {
@@ -64,7 +58,7 @@ func (s *matildaServer) loadLocations(filePath string) {
 func newServer() *matildaServer {
 	s := &matildaServer{}
 	//s.loadLocations(*jsonDBFile)
-	resourcePath := util.ResourcePath("maps/lat_lon_floor.json")
+	resourcePath := data.Path("maps/lat_lon_floor.json")
 	s.loadLocations(resourcePath)
 	return s
 }

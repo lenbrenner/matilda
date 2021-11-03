@@ -41,10 +41,7 @@ func Get() Application {
 }
 
 func (app Application) LoadPlan(filename string) {
-	// exec the schema or fail; multi-statement Exec behavior varies between
-	// database drivers;  pq will exec them all, sqlite3 won't, ymmv
-	var plan model.Plan
-	err := LoadJson(filename, &plan)
+	plan, err := LoadJson(filename)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -52,12 +49,13 @@ func (app Application) LoadPlan(filename string) {
 	app.LocationService.LoadAll(plan.Locations)
 }
 
-func LoadJson(filename string, plan *model.Plan) error {
+func LoadJson(filename string) (model.Plan, error) {
+	var plan model.Plan
 	dat, err := util.LoadPlan(fmt.Sprintf("maps/%s.json", filename))
 	if err == nil {
 		err := json.Unmarshal(dat, &plan)
-		return err
+		return plan, err
 	} else {
-		return err
+		return plan, err
 	}
 }

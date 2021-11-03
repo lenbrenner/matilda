@@ -10,7 +10,7 @@ import (
 type LocationService struct {
 	DB            *sqlx.DB           `inject:"Db"`
 	locationDao   daos.LocationDao   `inject:LocationDao`
-	transitionDao daos.TransitionDao `inject:LocationDao`
+	transitionDao daos.TransitionDao `inject:TransitionDao`
 }
 
 func (service LocationService) LoadAll(locations []model.Location) {
@@ -34,5 +34,11 @@ func (service LocationService) Display() {
 	for _, location := range locations {
 		fmt.Println(location.Label)
 	}
+	transitions := service.transitionDao.GetAll(*tx)
+	for _, transitions := range transitions {
+		fmt.Println(transitions)
+	}
+	
 	tx.Commit()
+	fmt.Println(locations)
 }

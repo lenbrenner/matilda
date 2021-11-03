@@ -20,7 +20,7 @@ func (LocationDao) Insert(tx sqlx.Tx, location model.Location) int {
 }
 
 func (LocationDao) GetAll(tx sqlx.Tx) []model.Location {
-	locations := []model.Location{}
+	var locations []model.Location
 	tx.Select(&locations, "SELECT * FROM location ORDER BY label ASC")
 	return locations
 }

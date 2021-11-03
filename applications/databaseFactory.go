@@ -20,7 +20,7 @@ CREATE TABLE location (
 CREATE SEQUENCE transition_id_seq;
 CREATE TABLE transition (
 	id INT NOT NULL DEFAULT NEXTVAL('transition_id_seq'),
-	location_id INT, 
+	locationId INT, 
     direction INT,
     destination text
 );`
