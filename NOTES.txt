@@ -60,3 +60,12 @@ Break project into: src, data/resources, ... it currently looks weird to have ou
 interfaces and delegation: https://medium.com/code-zen/go-interfaces-and-delegation-pattern-f962c138dc1e
 
 Toggle Column Selection Mode - https://www.jetbrains.com/help/go/multicursor.html
+
+hint: Pulling without specifying how to reconcile divergent branches is
+hint: discouraged. You can squelch this message by running one of the following
+hint: commands sometime before your next pull:
+hint: 
+hint:   git config pull.rebase false  # merge (the default strategy)
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint: 
