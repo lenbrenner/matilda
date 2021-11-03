@@ -24,17 +24,22 @@ func (service DoSomethingService) DoSomething() {
 		os.Exit(1)
 	}
 	tx := service.DB.MustBegin()
-	for i, location := range plan.Locations {
-		fmt.Printf("%v %v\n", i, location)
+	service.Load(tx, plan.Locations)
+	tx.Commit()
+}
+
+func (service DoSomethingService) Load(tx *sqlx.Tx, locations []model.Location) {
+	for _, location := range locations {
 		locationId := service.locationDao.Insert(*tx, location)
 		for _, transition := range location.Transitions {
 			service.transitionDao.Insert(*tx, locationId, transition)
 		}
-		fmt.Printf("%v", locationId)
 	}
+}
+func (service DoSomethingService) DoSomethingElse() {
+	tx := service.DB.MustBegin()
 	service.locationDao.Map(*tx)
 	locations := service.locationDao.GetAll(*tx)
-
 	for _, location := range locations {
 		fmt.Println(location.Label)
 	}
