@@ -1,11 +1,11 @@
 {
   "Locations": [
     {
-      "Label": "A1",
-      "Transitions": [
-        {"Direction": 1, "Destination" : "B1"},
-        {"Direction": 2, "Destination" : "A2"}
-      ]
+        "Label": "A1",
+        "Transitions": [
+          {"Direction": 1, "Destination" : "B1"},
+          {"Direction": 2, "Destination" : "A2"}
+        ]
     },
     {
       "Label": "A2",

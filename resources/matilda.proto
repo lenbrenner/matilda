@@ -11,13 +11,23 @@ service Matilda {
   rpc GetLocation(Point) returns (Location) {}
 }
 
+message Plan {
+  repeated Location locations = 1;
+}
+
 message Point {
-  int32 latitude = 1;
-  int32 longitude = 2;
+  int32 Latitude = 1;
+  int32 Longitude = 2;
+}
+
+message Transition {
+  int32 Direction = 1;
+  string Destination = 2;
 }
 
 message Location {
-  string name = 1;
-  Point location = 2;
+  string Name = 1;
+  Point Location = 2;
+  repeated Transition Transitions = 3;
   //Todo - add transitions and make this more like Location
 }
