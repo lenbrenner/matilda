@@ -36,6 +36,10 @@ type GroupedTransitions struct {
 	model.Transition
 }
 
+func last(arr []int) int {
+	return arr[len(arr) - 1]
+}
+//https://medium.com/@geisonfgfg/functional-go-bc116f4c96a4
 func groupByLocation(transitions []model.Transition) ([]int, []int, []int){
 	a := transitions[0:len(transitions)-1]
 	b := transitions[1:]
@@ -46,15 +50,28 @@ func groupByLocation(transitions []model.Transition) ([]int, []int, []int){
 	for i, ai := range(a) {
 		bi := b[i]
 		if ai.LocationId != bi.LocationId {
-			ends = append(ends, i)
-			starts = append(starts, i)
+			ends = append(ends, i + 1)
+			counts = append(counts, last(ends) - last(starts))
+			starts = append(starts, i + 1)
 		}
 	}
 	ends = append(ends, len(transitions))
-	for i, start := range(starts) {
-		counts = append(counts, ends[i] - start)
-	}
+	counts = append(counts, last(ends) - last(starts))
 	return starts, ends, counts
+}
+
+func boundaries(transitions []model.Transition) []int {
+	a := transitions[0:len(transitions)-1]
+	b := transitions[1:]
+	boundaries := make([]int, 0)
+	for i, ai := range(a) {
+		bi := b[i]
+		if ai.LocationId != bi.LocationId {
+			boundaries = append(boundaries, i + 1)
+		}
+	}
+	boundaries = append(boundaries, len(transitions))
+	return boundaries
 }
 
 func (service LocationService) Display() {
@@ -66,6 +83,8 @@ func (service LocationService) Display() {
 	}
 	transitions := service.transitionDao.GetAll(*tx)
 	//Todo - tidy this up
+	boundaries := boundaries(transitions)
+	fmt.Println(boundaries)
 	starts, ends, counts := groupByLocation(transitions)
 	fmt.Println(starts)
 	fmt.Println(ends)
