@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-option go_package = "takeoff.com/matilda/resources";
+option go_package = "takeoff.com/matilda/api";
 option java_multiple_files = true;
 option java_package = "com.takeoff.matilda";
 option java_outer_classname = "Matilda";
 
-package resources;
+package api;
 
 service Matilda {
   rpc GetLocation(Point) returns (Location) {}

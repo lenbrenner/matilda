@@ -13,7 +13,7 @@ import (
 	"net"
 
 	"takeoff.com/matilda/data"
-	pb "takeoff.com/matilda/resources"
+	pb "takeoff.com/matilda/api"
 )
 
 var (

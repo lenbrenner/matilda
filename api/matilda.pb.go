@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.26.0
 // 	protoc        v3.17.3
-// source: resources/matilda.proto
+// source: api/matilda.proto
 
-package resources
+package api
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -292,17 +292,17 @@ func file_resources_matilda_proto_rawDescGZIP() []byte {
 
 var file_resources_matilda_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_resources_matilda_proto_goTypes = []interface{}{
-	(*Plan)(nil),       // 0: resources.Plan
-	(*Point)(nil),      // 1: resources.Point
-	(*Transition)(nil), // 2: resources.Transition
-	(*Location)(nil),   // 3: resources.Location
+	(*Plan)(nil),       // 0: api.Plan
+	(*Point)(nil),      // 1: api.Point
+	(*Transition)(nil), // 2: api.Transition
+	(*Location)(nil),   // 3: api.Location
 }
 var file_resources_matilda_proto_depIdxs = []int32{
-	3, // 0: resources.Plan.locations:type_name -> resources.Location
-	1, // 1: resources.Location.Location:type_name -> resources.Point
-	2, // 2: resources.Location.Transitions:type_name -> resources.Transition
-	1, // 3: resources.Matilda.GetLocation:input_type -> resources.Point
-	3, // 4: resources.Matilda.GetLocation:output_type -> resources.Location
+	3, // 0: api.Plan.locations:type_name -> api.Location
+	1, // 1: api.Location.Location:type_name -> api.Point
+	2, // 2: api.Location.Transitions:type_name -> api.Transition
+	1, // 3: api.Matilda.GetLocation:input_type -> api.Point
+	3, // 4: api.Matilda.GetLocation:output_type -> api.Location
 	4, // [4:5] is the sub-list for method output_type
 	3, // [3:4] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
