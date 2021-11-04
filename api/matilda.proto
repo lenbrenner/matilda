@@ -12,7 +12,7 @@ service Matilda {
 }
 
 message Plan {
-  repeated Location locations = 1;
+  repeated Location Locations = 1;
 }
 
 message Point {
@@ -26,7 +26,7 @@ message Transition {
 }
 
 message Location {
-  string Name = 1;
+  string Label = 1;
   Point Location = 2;
   repeated Transition Transitions = 3;
   //Todo - add transitions and make this more like Location

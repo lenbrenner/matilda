@@ -1,72 +1,108 @@
 {
   "Locations": [
     {
-        "Label": "A1",
-        "Transitions": [
-          {"Direction": 1, "Destination" : "B1"},
-          {"Direction": 2, "Destination" : "A2"}
-        ]
-    },
-    {
-      "Label": "A2",
-      "Transitions": [
-        {"Direction": 1, "Destination": "B2"},
-        {"Direction": 2, "Destination": "A3"},
-        {"Direction": 3, "Destination": "A1"}
+      "label": "A1",
+      "location": {
+        "latitude": 401827388,
+        "longitude": -740294537
+      },
+      "transitions": [
+        {"direction": 1, "destination" : "B1"},
+        {"direction": 2, "destination" : "A2"}
       ]
     },
     {
-      "Label": "A3",
-      "Transitions": [
-        {"Direction": 1, "Destination" : "B3"},
-        {"Direction": 3, "Destination" : "A2"}
+      "label": "A2",
+      "location": {
+        "latitude": 410564152,
+        "longitude": -743685054
+      },
+      "transitions": [
+        {"direction": 1, "destination": "B2"},
+        {"direction": 2, "destination": "A3"},
+        {"direction": 3, "destination": "A1"}
       ]
     },
     {
-      "Label": "B1",
-      "Transitions": [
-        {"Direction": 0, "Destination": "A1"},
-        {"Direction": 1, "Destination": "C1"},
-        {"Direction": 2, "Destination": "B2"}
+      "label": "A3",
+      "location": {
+        "latitude": 408472324,
+        "longitude": -740726046
+      },
+      "transitions": [
+        {"direction": 1, "destination" : "B3"},
+        {"direction": 3, "destination" : "A2"}
       ]
     },
     {
-      "Label": "B2",
-      "Transitions": [
-        {"Direction": 0, "Destination": "A2"},
-        {"Direction": 1, "Destination": "C2"},
-        {"Direction": 2, "Destination": "B3"},
-        {"Direction": 3, "Destination": "A1"}
+      "label": "B1",
+      "location": {
+        "latitude": 412452168,
+        "longitude": -740214052
+      },
+      "transitions": [
+        {"direction": 0, "destination": "A1"},
+        {"direction": 1, "destination": "C1"},
+        {"direction": 2, "destination": "B2"}
       ]
     },
     {
-      "Label": "B3",
-      "Transitions": [
-        {"Direction": 0, "Destination": "A3"},
-        {"Direction": 1, "Destination": "C3"},
-        {"Direction": 3, "Destination": "B2"}
+      "label": "B2",
+      "location": {
+        "latitude": 409146138,
+        "longitude": -746188906
+      },
+      "transitions": [
+        {"direction": 0, "destination": "A2"},
+        {"direction": 1, "destination": "C2"},
+        {"direction": 2, "destination": "B3"},
+        {"direction": 3, "destination": "A1"}
       ]
     },
     {
-      "Label": "C1",
-      "Transitions": [
-        {"Direction": 0, "Destination": "B1"},
-        {"Direction": 2, "Destination": "A2"}
+      "label": "B3",
+      "location": {
+        "latitude": 404701380,
+        "longitude": -744781745
+      },
+      "transitions": [
+        {"direction": 0, "destination": "A3"},
+        {"direction": 1, "destination": "C3"},
+        {"direction": 3, "destination": "B2"}
       ]
     },
     {
-      "Label": "C2",
-      "Transitions": [
-        {"Direction": 0, "Destination": "B2"},
-        {"Direction": 2, "Destination": "A3"},
-        {"Direction": 3, "Destination": "A1"}
+      "label": "C1",
+      "location": {
+        "latitude": 409642566,
+        "longitude": -746017679
+      },
+      "transitions": [
+        {"direction": 0, "destination": "B1"},
+        {"direction": 2, "destination": "A2"}
       ]
     },
     {
-      "Label": "C3",
-      "Transitions": [
-        {"Direction": 0, "Destination": "B3"},
-        {"Direction": 3, "Destination": "A2"}
+      "label": "C2",
+      "location": {
+        "latitude": 408031728,
+        "longitude": -748645385
+      },
+      "transitions": [
+        {"direction": 0, "destination": "B2"},
+        {"direction": 2, "destination": "A3"},
+        {"direction": 3, "destination": "A1"}
+      ]
+    },
+    {
+      "label": "C3",
+      "location": {
+        "latitude": 413700272,
+        "longitude": -742135189
+      },
+      "transitions": [
+        {"direction": 0, "destination": "B3"},
+        {"direction": 3, "destination": "A2"}
       ]
     }
   ]

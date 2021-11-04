@@ -12,8 +12,8 @@ import (
 	"log"
 	"net"
 
-	"takeoff.com/matilda/data"
 	pb "takeoff.com/matilda/api"
+	"takeoff.com/matilda/data"
 )
 
 var (
@@ -26,11 +26,11 @@ var (
 
 type matildaServer struct {
 	pb.UnimplementedMatildaServer
-	savedLocations []*pb.Location
+	plan pb.Plan
 }
 
 func (s *matildaServer) GetLocation(ctx context.Context, point *pb.Point) (*pb.Location, error) {
-	for _, location := range s.savedLocations {
+	for _, location := range s.plan.Locations {
 		if proto.Equal(location.Location, point) {
 			return location, nil
 		}
@@ -49,7 +49,7 @@ func (s *matildaServer) loadLocations(filePath string) {
 			log.Fatalf("Failed to load default features: %v", err)
 		}
 	}
-	if err := json.Unmarshal(data, &s.savedLocations); err != nil {
+	if err := json.Unmarshal(data, &s.plan); err != nil {
 		log.Fatalf("Failed to load default features: %v", err)
 	}
 	fmt.Println("hello")
@@ -58,7 +58,7 @@ func (s *matildaServer) loadLocations(filePath string) {
 func newServer() *matildaServer {
 	s := &matildaServer{}
 	//s.loadLocations(*jsonDBFile)
-	resourcePath := data.Path("maps/lat_lon_floor.json")
+	resourcePath := data.Path("maps/3x3_floor.json")
 	s.loadLocations(resourcePath)
 	return s
 }
