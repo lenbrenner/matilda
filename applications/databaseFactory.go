@@ -14,7 +14,9 @@ func databaseFactory(_ axon.Injector, args axon.Args) axon.Instance {
 CREATE SEQUENCE location_id_seq;
 CREATE TABLE location (
 	id INT NOT NULL DEFAULT NEXTVAL('location_id_seq'), 
-    label text
+    label text,
+    latitude int ,
+    longitude int     
 );
 
 CREATE SEQUENCE transition_id_seq;

@@ -6,5 +6,5 @@ import (
 
 func main() {
 	app := applications.Get()
-	app.LocationService.Display()
+	app.LocationService.GetAll()
 }

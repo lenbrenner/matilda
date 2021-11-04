@@ -74,14 +74,22 @@ func boundaries(transitions []model.Transition) []int {
 	return boundaries
 }
 
-func (service LocationService) Display() {
+func (service LocationService) GetAll() []model.Location {
 	tx := service.DB.MustBegin()
 	service.locationDao.Map(*tx)
 	locations := service.locationDao.GetAll(*tx)
 	for _, location := range locations {
 		fmt.Println(location.Label)
 	}
+	//transitions := service.transitionDao.GetAll(*tx)
+	tx.Commit()
+	return locations
+}
+
+func (service LocationService) Display() {
+	tx := service.DB.MustBegin()
 	transitions := service.transitionDao.GetAll(*tx)
+	tx.Commit()
 	//Todo - tidy this up
 	boundaries := boundaries(transitions)
 	fmt.Println(boundaries)
@@ -89,9 +97,8 @@ func (service LocationService) Display() {
 	fmt.Println(starts)
 	fmt.Println(ends)
 	fmt.Println(counts)
-	for i, start := range(starts) {
+	for i, start := range (starts) {
 		end := ends[i]
 		fmt.Println(transitions[start:end])
 	}
-	tx.Commit()
 }

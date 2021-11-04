@@ -2,10 +2,8 @@
   "Locations": [
     {
       "label": "A1",
-      "location": {
-        "latitude": 401827388,
-        "longitude": -740294537
-      },
+      "latitude": 401827388,
+      "longitude": -740294537,
       "transitions": [
         {"direction": 1, "destination" : "B1"},
         {"direction": 2, "destination" : "A2"}
@@ -13,10 +11,8 @@
     },
     {
       "label": "A2",
-      "location": {
-        "latitude": 410564152,
-        "longitude": -743685054
-      },
+      "latitude": 410564152,
+      "longitude": -743685054,
       "transitions": [
         {"direction": 1, "destination": "B2"},
         {"direction": 2, "destination": "A3"},
@@ -25,10 +21,8 @@
     },
     {
       "label": "A3",
-      "location": {
-        "latitude": 408472324,
-        "longitude": -740726046
-      },
+      "latitude": 408472324,
+      "longitude": -740726046,
       "transitions": [
         {"direction": 1, "destination" : "B3"},
         {"direction": 3, "destination" : "A2"}
@@ -36,10 +30,8 @@
     },
     {
       "label": "B1",
-      "location": {
-        "latitude": 412452168,
-        "longitude": -740214052
-      },
+      "latitude": 412452168,
+      "longitude": -740214052,
       "transitions": [
         {"direction": 0, "destination": "A1"},
         {"direction": 1, "destination": "C1"},
@@ -48,10 +40,8 @@
     },
     {
       "label": "B2",
-      "location": {
-        "latitude": 409146138,
-        "longitude": -746188906
-      },
+      "latitude": 409146138,
+      "longitude": -746188906,
       "transitions": [
         {"direction": 0, "destination": "A2"},
         {"direction": 1, "destination": "C2"},
@@ -61,10 +51,8 @@
     },
     {
       "label": "B3",
-      "location": {
-        "latitude": 404701380,
-        "longitude": -744781745
-      },
+      "latitude": 404701380,
+      "longitude": -744781745,
       "transitions": [
         {"direction": 0, "destination": "A3"},
         {"direction": 1, "destination": "C3"},
@@ -73,10 +61,8 @@
     },
     {
       "label": "C1",
-      "location": {
-        "latitude": 409642566,
-        "longitude": -746017679
-      },
+      "latitude": 409642566,
+      "longitude": -746017679,
       "transitions": [
         {"direction": 0, "destination": "B1"},
         {"direction": 2, "destination": "A2"}
@@ -84,10 +70,8 @@
     },
     {
       "label": "C2",
-      "location": {
-        "latitude": 408031728,
-        "longitude": -748645385
-      },
+      "latitude": 408031728,
+      "longitude": -748645385,
       "transitions": [
         {"direction": 0, "destination": "B2"},
         {"direction": 2, "destination": "A3"},
@@ -96,10 +80,8 @@
     },
     {
       "label": "C3",
-      "location": {
-        "latitude": 413700272,
-        "longitude": -742135189
-      },
+      "latitude": 413700272,
+      "longitude": -742135189,
       "transitions": [
         {"direction": 0, "destination": "B3"},
         {"direction": 3, "destination": "A2"}

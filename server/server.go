@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net"
+	"takeoff.com/matilda/applications"
 
 	pb "takeoff.com/matilda/api"
 	"takeoff.com/matilda/data"
@@ -58,8 +59,19 @@ func (s *matildaServer) loadLocations(filePath string) {
 func newServer() *matildaServer {
 	s := &matildaServer{}
 	//s.loadLocations(*jsonDBFile)
-	resourcePath := data.Path("maps/3x3_floor.json")
-	s.loadLocations(resourcePath)
+	//resourcePath := data.Path("maps/3x3_floor.json")
+	app := applications.Get()
+	locationEntities := app.LocationService.GetAll()
+	locations := make([]*pb.Location, len(locationEntities))
+	for i, location := range locationEntities {
+		locations[i] = &pb.Location{}
+		locations[i].Label = string(location.Label)
+		locations[i].Location = &pb.Point{
+			Latitude: location.Latitude,
+			Longitude: location.Longitude}
+	}
+	s.plan.Locations = locations
+	//s.loadLocations(resourcePath)
 	return s
 }
 
