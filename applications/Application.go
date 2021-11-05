@@ -18,19 +18,20 @@ type Application struct {
 
 var application *Application
 func init() {
-	binder := axon.NewBinder(axon.NewPackage(
-		axon.Bind("Application").
-			To().StructPtr(new(Application)),
-		axon.Bind("Db").
-			To().Factory(databaseFactory).
-			WithArgs(axon.Args{os.Getenv("DB_INSTANCE_NAME")}),
-		axon.Bind("LocationService").
-			To().StructPtr(new(services.LocationService)),
-		axon.Bind("LocationDao").
-			To().StructPtr(new(daos.LocationDao)),
-		axon.Bind("TransitionDao").
-			To().StructPtr(new(daos.TransitionDao)),
-	))
+	binder := axon.NewBinder(
+		axon.NewPackage(
+			axon.Bind("Db").
+				To().Factory(databaseFactory).
+				WithArgs(axon.Args{os.Getenv("DB_INSTANCE_NAME")}),
+			axon.Bind("Application").
+				To().StructPtr(new(Application)),
+			axon.Bind("LocationDao").
+				To().StructPtr(new(daos.LocationDao)),
+			axon.Bind("TransitionDao").
+				To().StructPtr(new(daos.TransitionDao)),
+			axon.Bind("LocationService").
+				To().StructPtr(new(services.LocationService)),
+			))
 	injector := axon.NewInjector(binder)
 	application = injector.GetStructPtr("Application").(*Application)
 	application.LoadPlan("3x3_floor")
