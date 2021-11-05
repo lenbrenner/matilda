@@ -7,6 +7,11 @@ import (
 	"takeoff.com/matilda/model"
 )
 
+type ILocationService interface {
+	LoadAll(locations []model.Location)
+	GetAll() []model.Location
+}
+
 type LocationService struct {
 	DB            *sqlx.DB            `inject:"Db"`
 	LocationDao   *daos.LocationDao   `inject:"LocationDao"`

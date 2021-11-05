@@ -13,7 +13,7 @@ import (
 )
 
 type Application struct {
-	LocationService *services.LocationService `inject:"LocationService"`
+	LocationService services.ILocationService `inject:"LocationService"`
 }
 
 var application *Application
