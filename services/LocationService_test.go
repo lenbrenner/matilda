@@ -5,6 +5,7 @@ import (
 	"github.com/eddieowens/axon"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"takeoff.com/matilda/model"
 	"testing"
@@ -29,7 +30,11 @@ func (MockLocationDao) Insert(tx sqlx.Tx, location model.Location) int {
 }
 
 func (MockLocationDao) GetAll(tx sqlx.Tx) []model.Location {
-	return make([]model.Location, 0)
+	return []model.Location{
+		{Label: "A2", Latitude: 13, Longitude: 34},
+		{Label: "B2", Latitude: 23, Longitude: 24},
+		{Label: "C2", Latitude: 33, Longitude: 14},
+	}
 }
 
 func (MockLocationDao) Map(tx sqlx.Tx) {
@@ -58,5 +63,8 @@ func TestService(t *testing.T) {
 	injector.Add("TransitionDao", axon.StructPtr(new(MockTransitionDao)))
 
 	service := injector.GetStructPtr("LocationService").(*LocationService)
-	service.GetAll()
+	locations := service.GetAll()
+	assert.Equal(t, model.LocationLabel("A2"), locations[0].Label)
+	assert.Equal(t, model.LocationLabel("B2"), locations[1].Label)
+	assert.Equal(t, model.LocationLabel("C2"), locations[2].Label)
 }
