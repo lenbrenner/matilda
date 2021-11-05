@@ -12,10 +12,16 @@ type ILocationService interface {
 	GetAll() []model.Location
 }
 
+//Todo - find a new home
+//Facilitates mocking
+type IDB interface {
+	MustBegin() *sqlx.Tx
+}
+
 type LocationService struct {
-	DB            *sqlx.DB            `inject:"Db"`
-	LocationDao   *daos.LocationDao   `inject:"LocationDao"`
-	TransitionDao *daos.TransitionDao `inject:"TransitionDao"`
+	DB            IDB            `inject:"Db"`
+	LocationDao   daos.ILocationDao   `inject:"LocationDao"`
+	TransitionDao daos.ITransitionDao `inject:"TransitionDao"`
 }
 
 func (service LocationService) LoadAll(locations []model.Location) {

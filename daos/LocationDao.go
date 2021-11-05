@@ -7,6 +7,12 @@ import (
 	"takeoff.com/matilda/model"
 )
 
+type ILocationDao interface {
+	Insert(tx sqlx.Tx, location model.Location) int
+	GetAll(tx sqlx.Tx) []model.Location
+	Map(tx sqlx.Tx)
+}
+
 type LocationDao struct {}
 
 func (LocationDao) Insert(tx sqlx.Tx, location model.Location) int {
