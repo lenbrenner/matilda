@@ -94,7 +94,9 @@ func (service LocationService) GetAll() []model.Location {
 		fmt.Println(location.Label)
 	}
 	//transitions := service.TransitionDao.GetAll(*tx)
-	tx.Commit()
+	if tx != nil {
+		tx.Commit()
+	}
 	return locations
 }
 

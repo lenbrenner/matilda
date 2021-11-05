@@ -21,7 +21,6 @@ func (MockLocationService) GetAll() []model.Location {
 	return make([]model.Location, 0)
 }
 
-
 func TestApplication(t *testing.T) {
 	binder := axon.NewBinder(
 		axon.NewPackage(

@@ -7,6 +7,7 @@ require (
 	github.com/golang/protobuf v1.5.0
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/lib/pq v1.10.3
+	github.com/mattn/go-sqlite3 v1.14.9
 	github.com/stretchr/testify v1.7.0
 	google.golang.org/grpc v1.41.0
 	google.golang.org/protobuf v1.27.1
@@ -14,7 +15,6 @@ require (
 
 require (
 	github.com/davecgh/go-spew v1.1.0 // indirect
-	github.com/mattn/go-sqlite3 v1.14.9 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/stretchr/objx v0.1.0 // indirect
 	golang.org/x/net v0.0.0-20200822124328-c89045814202 // indirect
