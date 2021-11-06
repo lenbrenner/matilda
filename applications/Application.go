@@ -6,6 +6,7 @@ import (
 	"github.com/eddieowens/axon"
 	_ "github.com/lib/pq"
 	"os"
+	"reflect"
 	"takeoff.com/matilda/daos"
 	"takeoff.com/matilda/model"
 	"takeoff.com/matilda/services"
@@ -17,23 +18,30 @@ type Application struct {
 }
 
 var application *Application
+
+func name(class interface{}) string {
+	name := reflect.TypeOf(class).Name()
+	fmt.Printf("%v", name)
+	return name
+}
+
 func init() {
 	binder := axon.NewBinder(
 		axon.NewPackage(
 			axon.Bind("Db").
 				To().Factory(databaseFactory).
 				WithArgs(axon.Args{os.Getenv("DB_INSTANCE_NAME")}),
-			axon.Bind("Application").
+			axon.Bind(name(Application{})).
 				To().StructPtr(new(Application)),
-			axon.Bind("LocationDao").
+			axon.Bind(name(daos.LocationDao{})).
 				To().StructPtr(new(daos.LocationDao)),
-			axon.Bind("TransitionDao").
+			axon.Bind(name(daos.TransitionDao{})).
 				To().StructPtr(new(daos.TransitionDao)),
-			axon.Bind("LocationService").
+			axon.Bind(name(services.LocationService{})).
 				To().StructPtr(new(services.LocationService)),
 			))
 	injector := axon.NewInjector(binder)
-	application = injector.GetStructPtr("Application").(*Application)
+	application = injector.GetStructPtr(name(Application{})).(*Application)
 	application.LoadPlan("3x3_floor")
 }
 
