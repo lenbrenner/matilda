@@ -2,19 +2,17 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/golang/protobuf/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"io/ioutil"
 	"log"
 	"net"
-	"takeoff.com/matilda/applications"
-
 	pb "takeoff.com/matilda/api"
+	"takeoff.com/matilda/applications"
 	"takeoff.com/matilda/data"
+	"takeoff.com/matilda/model"
 )
 
 var (
@@ -27,52 +25,36 @@ var (
 
 type matildaServer struct {
 	pb.UnimplementedMatildaServer
-	plan pb.Plan
+	application applications.Application
 }
 
+func transitionsToPB(transitions []model.Transition) []*pb.Transition {
+	pbTransitions := make([]*pb.Transition, len(transitions))
+	for i, transition := range transitions {
+		pbTransitions[i] = &pb.Transition{
+			Direction: int32(transition.Direction),
+			Destination: string(transition.Destination),
+		}
+	}
+	return pbTransitions
+}
 func (s *matildaServer) GetLocation(ctx context.Context, point *pb.Point) (*pb.Location, error) {
-	for _, location := range s.plan.Locations {
-		if proto.Equal(location.Location, point) {
-			return location, nil
+	for _, location := range s.application.LocationService.GetAll() {
+		locationPoint := &pb.Point{Latitude: location.Latitude, Longitude: location.Longitude}
+		if proto.Equal(locationPoint, point) {
+			return &pb.Location{
+				Label: string(location.Label),
+				Location: locationPoint,
+				Transitions: transitionsToPB(location.Transitions),
+			}, nil
 		}
 	}
 	// No location was found, return an unnamed location
 	return &pb.Location{Location: point}, nil
 }
 
-// loadLocations loads features from a JSON file.
-func (s *matildaServer) loadLocations(filePath string) {
-	var data []byte
-	if filePath != "" {
-		var err error
-		data, err = ioutil.ReadFile(filePath)
-		if err != nil {
-			log.Fatalf("Failed to load default features: %v", err)
-		}
-	}
-	if err := json.Unmarshal(data, &s.plan); err != nil {
-		log.Fatalf("Failed to load default features: %v", err)
-	}
-	fmt.Println("hello")
-}
-
 func newServer() *matildaServer {
-	s := &matildaServer{}
-	//s.loadLocations(*jsonDBFile)
-	//resourcePath := data.Path("maps/3x3_floor.json")
-	app := applications.Get()
-	locationEntities := app.LocationService.GetAll()
-	locations := make([]*pb.Location, len(locationEntities))
-	for i, location := range locationEntities {
-		locations[i] = &pb.Location{}
-		locations[i].Label = string(location.Label)
-		locations[i].Location = &pb.Point{
-			Latitude: location.Latitude,
-			Longitude: location.Longitude}
-	}
-	s.plan.Locations = locations
-	//s.loadLocations(resourcePath)
-	return s
+	return &matildaServer{application: applications.Get()}
 }
 
 func main() {

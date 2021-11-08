@@ -37,44 +37,28 @@ func (service LocationService) Load(location model.Location) {
 	tx.Commit()
 }
 
-type BinLength struct {
-	Bin    int
-	Length int
-}
-type GroupedTransitions struct {
-	BinLengths []BinLength
-	model.Transition
+func (service LocationService) GetAll() []model.Location {
+	tx := service.DB.MustBegin()
+	locations := service.LocationDao.GetAll(*tx)
+	transitions := service.TransitionDao.GetAll(*tx)
+	starts, ends, _ := encodeTransitions(transitions)
+	transitionsByLocation := make(map[model.LocationId][]model.Transition, len(starts))
+	//Todo - tidy this up
+	for i, start := range starts {
+		end := ends[i]
+		transitionsByLocation[transitions[start].LocationId] = transitions[start:end]
+	}
+	for i, location := range locations {
+		locations[i].Transitions = transitionsByLocation[location.ID]
+	}
+	if tx != nil {
+		tx.Commit()
+	}
+	return locations
 }
 
 func last(arr []int) int {
 	return arr[len(arr)-1]
-}
-
-//https://medium.com/@geisonfgfg/functional-go-bc116f4c96a4
-func groupByLocation(transitions []model.Transition, boundaryTest func(model.Transition, model.Transition) bool) ([]int, []int, []int) {
-	a := transitions[0 : len(transitions)-1]
-	b := transitions[1:]
-	starts := make([]int, 0)
-	ends := make([]int, 0)
-	counts := make([]int, 0)
-	starts = append(starts, 0)
-	for i, ai := range a {
-		bi := b[i]
-		if boundaryTest(ai, bi) {
-			ends = append(ends, i+1)
-			counts = append(counts, last(ends)-last(starts))
-			starts = append(starts, i+1)
-		}
-	}
-	ends = append(ends, len(transitions))
-	counts = append(counts, last(ends)-last(starts))
-	return starts, ends, counts
-}
-
-type LocationJoiner struct {
-	locations []model.Location
-	transitions []model.Transition
-	starts, ends, counts int
 }
 
 func encodeTransitions(
@@ -97,24 +81,4 @@ func encodeTransitions(
 	ends = append(ends, len(transitions))
 	counts = append(counts, last(ends)-last(starts))
 	return starts, ends, counts
-}
-
-func (service LocationService) GetAll() []model.Location {
-	tx := service.DB.MustBegin()
-	locations := service.LocationDao.GetAll(*tx)
-	transitions := service.TransitionDao.GetAll(*tx)
-	starts, ends, _ := encodeTransitions(transitions)
-	transitionsByLocation := make(map[model.LocationId][]model.Transition, len(starts))
-	//Todo - tidy this up
-	for i, start := range starts {
-		end := ends[i]
-		transitionsByLocation[transitions[start].LocationId] = transitions[start:end]
-	}
-	for i, location := range locations {
-		locations[i].Transitions = transitionsByLocation[location.ID]
-	}
-	if tx != nil {
-		tx.Commit()
-	}
-	return locations
 }
