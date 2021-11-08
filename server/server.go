@@ -39,6 +39,7 @@ func transitionsToPB(transitions []model.Transition) []*pb.Transition {
 	return pbTransitions
 }
 func (s *matildaServer) GetLocation(ctx context.Context, point *pb.Point) (*pb.Location, error) {
+	//Todo - add Dao method GetByPoint
 	for _, location := range s.application.LocationService.GetAll() {
 		locationPoint := &pb.Point{Latitude: location.Latitude, Longitude: location.Longitude}
 		if proto.Equal(locationPoint, point) {
