@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	"github.com/jmoiron/sqlx"
 	"takeoff.com/matilda/daos"
 	"takeoff.com/matilda/model"
@@ -19,7 +18,7 @@ type IDB interface {
 }
 
 type LocationService struct {
-	DB            IDB            `inject:"Db"`
+	DB            IDB                 `inject:"Db"`
 	LocationDao   daos.ILocationDao   `inject:"LocationDao"`
 	TransitionDao daos.ITransitionDao `inject:"TransitionDao"`
 }
@@ -52,7 +51,35 @@ func last(arr []int) int {
 }
 
 //https://medium.com/@geisonfgfg/functional-go-bc116f4c96a4
-func groupByLocation(transitions []model.Transition) ([]int, []int, []int) {
+func groupByLocation(transitions []model.Transition, boundaryTest func(model.Transition, model.Transition) bool) ([]int, []int, []int) {
+	a := transitions[0 : len(transitions)-1]
+	b := transitions[1:]
+	starts := make([]int, 0)
+	ends := make([]int, 0)
+	counts := make([]int, 0)
+	starts = append(starts, 0)
+	for i, ai := range a {
+		bi := b[i]
+		if boundaryTest(ai, bi) {
+			ends = append(ends, i+1)
+			counts = append(counts, last(ends)-last(starts))
+			starts = append(starts, i+1)
+		}
+	}
+	ends = append(ends, len(transitions))
+	counts = append(counts, last(ends)-last(starts))
+	return starts, ends, counts
+}
+
+type LocationJoiner struct {
+	locations []model.Location
+	transitions []model.Transition
+	starts, ends, counts int
+}
+
+func encodeTransitions(
+	transitions []model.Transition,
+	) ([]int, []int, []int) {
 	a := transitions[0 : len(transitions)-1]
 	b := transitions[1:]
 	starts := make([]int, 0)
@@ -72,47 +99,22 @@ func groupByLocation(transitions []model.Transition) ([]int, []int, []int) {
 	return starts, ends, counts
 }
 
-func boundaries(transitions []model.Transition) []int {
-	a := transitions[0 : len(transitions)-1]
-	b := transitions[1:]
-	boundaries := make([]int, 0)
-	for i, ai := range a {
-		bi := b[i]
-		if ai.LocationId != bi.LocationId {
-			boundaries = append(boundaries, i+1)
-		}
-	}
-	boundaries = append(boundaries, len(transitions))
-	return boundaries
-}
-
 func (service LocationService) GetAll() []model.Location {
 	tx := service.DB.MustBegin()
-	service.LocationDao.Map(*tx)
 	locations := service.LocationDao.GetAll(*tx)
-	for _, location := range locations {
-		fmt.Println(location.Label)
+	transitions := service.TransitionDao.GetAll(*tx)
+	starts, ends, _ := encodeTransitions(transitions)
+	transitionsByLocation := make(map[model.LocationId][]model.Transition, len(starts))
+	//Todo - tidy this up
+	for i, start := range starts {
+		end := ends[i]
+		transitionsByLocation[transitions[start].LocationId] = transitions[start:end]
 	}
-	//transitions := service.TransitionDao.GetAll(*tx)
+	for i, location := range locations {
+		locations[i].Transitions = transitionsByLocation[location.ID]
+	}
 	if tx != nil {
 		tx.Commit()
 	}
 	return locations
-}
-
-func (service LocationService) Display() {
-	tx := service.DB.MustBegin()
-	transitions := service.TransitionDao.GetAll(*tx)
-	tx.Commit()
-	//Todo - tidy this up
-	boundaries := boundaries(transitions)
-	fmt.Println(boundaries)
-	starts, ends, counts := groupByLocation(transitions)
-	fmt.Println(starts)
-	fmt.Println(ends)
-	fmt.Println(counts)
-	for i, start := range starts {
-		end := ends[i]
-		fmt.Println(transitions[start:end])
-	}
 }

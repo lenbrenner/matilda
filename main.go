@@ -1,10 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"takeoff.com/matilda/applications"
 )
 
 func main() {
 	app := applications.Get()
-	app.LocationService.GetAll()
+	for _, x := range app.LocationService.GetAll() {
+		 fmt.Println(x)
+	}
 }

@@ -18,8 +18,10 @@ type Application struct {
 
 var application *Application
 
-//This is why I can't use constants to keep bind and inject in sync:
+//This works in conjunction with `inject:"<Name>"` in our Daos and Services
+//I can't use constants to keep bind and inject in sync:
 //	https://github.com/golang/go/issues/40247
+//Also I tried to use the new(<InstancePtr>) to derive name such as reflect.TypeOf(<InstancePtr>)
 func init() {
 	binder := axon.NewBinder(
 		axon.NewPackage(

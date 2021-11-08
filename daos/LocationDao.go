@@ -1,7 +1,6 @@
 package daos
 
 import (
-	"fmt"
 	"github.com/jmoiron/sqlx"
 	"log"
 	"takeoff.com/matilda/model"
@@ -10,7 +9,6 @@ import (
 type ILocationDao interface {
 	Insert(tx sqlx.Tx, location model.Location) int
 	GetAll(tx sqlx.Tx) []model.Location
-	Map(tx sqlx.Tx)
 }
 
 type LocationDao struct {}
@@ -31,15 +29,16 @@ func (LocationDao) GetAll(tx sqlx.Tx) []model.Location {
 	return locations
 }
 
-func (LocationDao) Map(tx sqlx.Tx) {
-	// Loop through rows using only one struct
-	location := model.Location{}
-	rows, _ := tx.Queryx("SELECT * FROM location")
-	for rows.Next() {
-		err := rows.StructScan(&location)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		fmt.Printf("%#v\n", location)
-	}
-}
+//Dead code offers an alternative to loading rows into memory. ie: we could stream.
+//func (LocationDao) Map(tx sqlx.Tx) {
+//	// Loop through rows using only one struct
+//	location := model.Location{}
+//	rows, _ := tx.Queryx("SELECT * FROM location")
+//	for rows.Next() {
+//		err := rows.StructScan(&location)
+//		if err != nil {
+//			log.Fatalln(err)
+//		}
+//		fmt.Printf("%#v\n", location)
+//	}
+//}
